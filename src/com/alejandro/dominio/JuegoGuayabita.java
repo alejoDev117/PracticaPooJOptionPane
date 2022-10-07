@@ -3,6 +3,8 @@ package com.alejandro.dominio;
 public class JuegoGuayabita {
     private int pote;
     private int apuestaInicial;
+    private int valorDadoSegundaTirada;
+    private  int cambio = 0;
 
     public JuegoGuayabita(int apuestaInicial) {
         this.apuestaInicial = apuestaInicial;
@@ -19,17 +21,23 @@ public class JuegoGuayabita {
     }
     public boolean segundaTirada(int dado, Jugador jugador, int cantidadEnApuesta){
         if(validarApuestaSegura(cantidadEnApuesta,jugador)){
-            jugador.setDineroActual(jugador.getDineroActual()-cantidadEnApuesta);
-            if(jugador.lanzarDado()>=dado){
+            valorDadoSegundaTirada = jugador.lanzarDado();
+            if(valorDadoSegundaTirada>dado){
                 jugador.setDineroActual(jugador.getDineroActual()+cantidadEnApuesta);
                 pote -= cantidadEnApuesta;
                 return true;
             }else {
+                jugador.setDineroActual(jugador.getDineroActual()-cantidadEnApuesta);
                 pote += cantidadEnApuesta;
                 return false;
             }
         }
+        valorDadoSegundaTirada = 0;
         return false;
+    }
+
+    public int dadoSegundaTirada(){
+        return valorDadoSegundaTirada;
     }
 
     private boolean validarApuestaSegura(int montoApostar,Jugador jugadorApostar){
@@ -37,6 +45,15 @@ public class JuegoGuayabita {
             return true;
         }else{
             return false;
+        }
+    }
+    public Jugador cambioDeTurno(Jugador numero1, Jugador numero2){
+        if(cambio == 0){
+            cambio = 1;
+            return numero1;
+        }else {
+            cambio = 0;
+            return numero2;
         }
     }
     public Jugador ganadador(Jugador numero1 ,Jugador numero2){
